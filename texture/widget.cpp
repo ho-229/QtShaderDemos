@@ -53,10 +53,10 @@ void Widget::initializeGL()
         1, 1, 0,        // red
 
         // texCoord
-        1, 1,
         1, 0,
+        1, 1,
+        0, 1,
         0, 0,
-        0, 1
     };
     m_vbo.create();
     m_vbo.bind();
@@ -100,14 +100,13 @@ void Widget::initializeGL()
     m_texWall.create();
     m_texWall.setWrapMode(QOpenGLTexture::Repeat);
     m_texWall.setMinMagFilters(QOpenGLTexture::Linear, QOpenGLTexture::Linear);
-    m_texWall.setData(m_imageWall.mirrored());
+    m_texWall.setData(m_imageWall);
+    m_program.setUniformValue(0, 0);
 
     m_texFace.create();
     m_texFace.setWrapMode(QOpenGLTexture::Repeat);
     m_texFace.setMinMagFilters(QOpenGLTexture::Linear, QOpenGLTexture::Linear);
-    m_texFace.setData(m_imageFace.mirrored());
-
-    m_program.setUniformValue(0, 0);
+    m_texFace.setData(m_imageFace);
     m_program.setUniformValue(1, 1);
 
     m_program.release();
