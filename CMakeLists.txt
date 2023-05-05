@@ -12,3 +12,4 @@ set(CMAKE_AUTORCC ON)
 
 add_subdirectory(triangle)
 add_subdirectory(rectangle)
+add_subdirectory(texture)
