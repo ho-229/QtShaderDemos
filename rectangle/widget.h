@@ -2,7 +2,6 @@
 #define WIDGET_H
 
 #include <QOpenGLWidget>
-#include <QOpenGLTexture>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions_4_4_Core>

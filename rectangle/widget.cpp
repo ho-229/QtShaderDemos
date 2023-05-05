@@ -46,9 +46,9 @@ void Widget::initializeGL()
         -0.5f, -0.5f,   // left bottom
 
         1, 0, 0,        // red
-        0, 0, 1,        // blue
         0, 1, 0,        // green
-        1, 0, 0,        // red
+        0, 0, 1,        // blue
+        1, 1, 0,        // yellow
     };
     m_vbo.create();
     m_vbo.bind();
