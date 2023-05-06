@@ -22,6 +22,15 @@ Widget::~Widget()
 
 }
 
+void Widget::closeEvent(QCloseEvent *)
+{
+    m_vao.destroy();
+    m_vbo.destroy();
+    m_ebo.destroy();
+    m_texWall.destroy();
+    m_texFace.destroy();
+}
+
 void Widget::initializeGL()
 {
     this->initializeOpenGLFunctions();
@@ -112,14 +121,8 @@ void Widget::initializeGL()
     m_program.release();
 }
 
-void Widget::resizeGL(int w, int h)
-{
-
-}
-
 void Widget::paintGL()
 {
-    glViewport(0, 0, width(), height());
     glClear(GL_COLOR_BUFFER_BIT);
 
     m_program.bind();

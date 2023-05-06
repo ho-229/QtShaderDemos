@@ -8,6 +8,8 @@
 #include <QOpenGLFunctions_4_4_Core>
 #include <QOpenGLVertexArrayObject>
 
+class QCloseEvent;
+
 class Widget : public QOpenGLWidget, private QOpenGLFunctions_4_4_Core
 {
     Q_OBJECT
@@ -17,8 +19,8 @@ public:
     virtual ~Widget() override;
 
 protected:
+    void closeEvent(QCloseEvent *) override;
     void initializeGL() override;
-    void resizeGL(int w, int h) override;
     void paintGL() override;
 
 private:
