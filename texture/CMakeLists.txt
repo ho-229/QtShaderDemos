@@ -12,7 +12,7 @@ set(PROJECT_SOURCES
 )
 
 qt_add_resources(PROJECT_SOURCES shader.qrc)
-qt_add_resources(PROJECT_SOURCES images.qrc)
+qt_add_resources(PROJECT_SOURCES ../assets/images.qrc)
 
 add_executable(apptexture
     ${PROJECT_SOURCES}
