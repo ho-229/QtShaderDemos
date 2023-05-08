@@ -4,6 +4,8 @@
 #include <QMatrix4x4>
 #include <QVariantAnimation>
 
+#define PERSPECTIVE_ENABLE 1
+
 constexpr GLfloat vertices[] =  {
     // vertices          texCoord
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -157,10 +159,6 @@ void Widget::initializeGL()
     view.translate(0, 0, -5);
     m_program.setUniformValue(3, view);
 
-    QMatrix4x4 projection;
-    projection.perspective(45, static_cast<double>(this->width()) / this->height(), .1, 100);
-    m_program.setUniformValue(4, projection);
-
     m_program.release();
 
     m_animation->start();
@@ -170,7 +168,12 @@ void Widget::resizeGL(int w, int h)
 {
     m_program.bind();
     QMatrix4x4 projection;
+#if PERSPECTIVE_ENABLE
     projection.perspective(45, static_cast<double>(this->width()) / this->height(), .1, 100);
+#else
+    qreal aspect = static_cast<double>(this->width()) / this->height();
+    projection.ortho(-3 * aspect, 3 * aspect, -3, 3, .1, 100);
+#endif
     m_program.setUniformValue(4, projection);
     m_program.release();
 }
