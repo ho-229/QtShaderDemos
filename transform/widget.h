@@ -9,8 +9,6 @@
 #include <QOpenGLVertexArrayObject>
 
 class QCloseEvent;
-class QVariantAnimation;
-class QSequentialAnimationGroup;
 class QParallelAnimationGroup;
 
 class Widget : public QOpenGLWidget, private QOpenGLFunctions_4_4_Core

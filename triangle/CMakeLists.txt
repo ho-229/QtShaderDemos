@@ -38,3 +38,5 @@ target_link_libraries(apptriangle
 install(TARGETS apptriangle
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+qt_finalize_target(apptriangle)

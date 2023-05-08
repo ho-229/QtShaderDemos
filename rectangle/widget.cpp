@@ -59,7 +59,7 @@ void Widget::initializeGL()
     };
     m_vbo.create();
     m_vbo.bind();
-    m_vbo.allocate(vertices, sizeof(vertices) * sizeof(GLfloat));
+    m_vbo.allocate(vertices, sizeof(vertices));
     m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
 
 #if USE_VAO
@@ -91,7 +91,7 @@ void Widget::initializeGL()
     };
     m_ebo.create();
     m_ebo.bind();
-    m_ebo.allocate(indices, sizeof(indices) * sizeof(unsigned));
+    m_ebo.allocate(indices, sizeof(indices));
     m_ebo.release();
 
     m_program.release();
