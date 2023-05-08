@@ -1,5 +1,6 @@
 #include "widget.h"
 
+#include <QtMath>
 #include <QVector3D>
 #include <QMatrix4x4>
 #include <QVariantAnimation>
@@ -78,12 +79,12 @@ Widget::Widget(QWidget *parent)
 
     this->setFormat(format);
 
-    m_animation->setStartValue(0);
-    m_animation->setEndValue(360);
+    m_animation->setStartValue(0.);
+    m_animation->setEndValue(M_PI * 2);
     m_animation->setDuration(3000);
     m_animation->setLoopCount(-1);
     QObject::connect(m_animation, &QVariantAnimation::valueChanged, this, [this](const QVariant &value) {
-        m_routeAngle = value.toInt();
+        m_routeAngle = value.toDouble();
         this->repaint();
     });
 }
@@ -154,11 +155,6 @@ void Widget::initializeGL()
     m_texFace.setData(m_imageFace);
     m_program.setUniformValue(1, 1);
 
-    QMatrix4x4 view;
-    view.optimize();
-    view.translate(0, 0, -5);
-    m_program.setUniformValue(3, view);
-
     m_program.release();
 
     m_animation->start();
@@ -187,12 +183,19 @@ void Widget::paintGL()
     m_texWall.bind(0);
     m_texFace.bind(1);
 
+    const auto radius = 10.;
+    const QVector3D cameraPosition = {static_cast<float>(qSin(m_routeAngle) * radius),
+                                      0, static_cast<float>(qCos(m_routeAngle) * radius)};
+    QMatrix4x4 view;
+    view.lookAt(cameraPosition, {}, {0, 1, 0});
+    m_program.setUniformValue(3, view);
+
     for(size_t i = 0; i < 10; ++i)
     {
         QMatrix4x4 model;
         model.optimize();
         model.translate(cubePositions[i]);
-        model.rotate(m_routeAngle + 20 * i, 1, 1, 1);
+        model.rotate(20 * i, 1, 1, 1);
         m_program.setUniformValue(2, model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
