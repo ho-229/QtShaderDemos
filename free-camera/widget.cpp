@@ -1,6 +1,7 @@
 #include "widget.h"
 
 #include <QtMath>
+#include <QVector2D>
 #include <QVector3D>
 #include <QKeyEvent>
 #include <QMatrix4x4>
@@ -88,7 +89,8 @@ Widget::Widget(QWidget *parent)
 
 Widget::~Widget()
 {
-    QGuiApplication::restoreOverrideCursor();
+    if(this->hasMouseTracking())
+        QGuiApplication::restoreOverrideCursor();
 }
 
 void Widget::closeEvent(QCloseEvent *)
@@ -216,9 +218,19 @@ void Widget::keyPressEvent(QKeyEvent *key)
     case Qt::Key_D:
         m_cameraPosition += QVector3D::crossProduct(m_cameraFront, upNormal) * cameraSpeed;
         break;
+    case Qt::Key_Space:
+        m_cameraPosition += upNormal * cameraSpeed;
+        break;
+    case Qt::Key_Shift:
+        m_cameraPosition -= upNormal * cameraSpeed;
+        break;
+    case Qt::Key_Super_L:
     case Qt::Key_Escape:
-        this->setMouseTracking(false);
-        QGuiApplication::restoreOverrideCursor();
+        if(this->hasMouseTracking())
+        {
+            this->setMouseTracking(false);
+            QGuiApplication::restoreOverrideCursor();
+        }
         Q_FALLTHROUGH();
     default:
         return;
@@ -229,15 +241,13 @@ void Widget::keyPressEvent(QKeyEvent *key)
 
 void Widget::mouseMoveEvent(QMouseEvent *pos)
 {
-    float xOffset = pos->x() - m_center.x();
-    float yOffset = m_center.y() - pos->y();
+    QVector2D offset = {static_cast<float>(pos->x() - m_center.x()), static_cast<float>(m_center.y() - pos->y())};
 
-    constexpr float sensitivity = 0.2;
-    xOffset *= sensitivity;
-    yOffset *= sensitivity;
+    constexpr float sensitivity = 0.15;
+    offset *= sensitivity;
 
-    m_yaw += xOffset;
-    m_pitch += yOffset;
+    m_yaw += offset.x();
+    m_pitch += offset.y();
 
     if(m_pitch > 89)
         m_pitch = 89;
@@ -255,7 +265,10 @@ void Widget::mouseMoveEvent(QMouseEvent *pos)
 
 void Widget::mousePressEvent(QMouseEvent *)
 {
-    QGuiApplication::setOverrideCursor(Qt::BlankCursor);
-    QCursor::setPos(this->mapToGlobal(m_center));
-    this->setMouseTracking(true);
+    if(!this->hasMouseTracking())
+    {
+        QGuiApplication::setOverrideCursor(Qt::BlankCursor);
+        QCursor::setPos(this->mapToGlobal(m_center));
+        this->setMouseTracking(true);
+    }
 }
