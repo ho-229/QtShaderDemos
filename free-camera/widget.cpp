@@ -7,7 +7,6 @@
 #include <QMatrix4x4>
 #include <QMouseEvent>
 #include <QGuiApplication>
-#include <QVariantAnimation>
 
 #define PERSPECTIVE_ENABLE 1
 
