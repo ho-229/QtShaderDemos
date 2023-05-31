@@ -26,6 +26,7 @@ protected:
     void keyPressEvent(QKeyEvent *) override;
     void mouseMoveEvent(QMouseEvent *) override;
     void mousePressEvent(QMouseEvent *) override;
+    void wheelEvent(QWheelEvent *) override;
 
 private:
     QOpenGLShaderProgram m_program;
@@ -45,6 +46,7 @@ private:
 
     float m_yaw = -90;
     float m_pitch = 0;
+    int m_fov = 45;
 
     QPoint m_center;
 };

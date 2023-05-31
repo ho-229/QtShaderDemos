@@ -6,6 +6,7 @@
 #include <QKeyEvent>
 #include <QMatrix4x4>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QGuiApplication>
 
 #define PERSPECTIVE_ENABLE 1
@@ -156,17 +157,6 @@ void Widget::initializeGL()
 
 void Widget::resizeGL(int w, int h)
 {
-    m_program.bind();
-    QMatrix4x4 projection;
-#if PERSPECTIVE_ENABLE
-    projection.perspective(45, static_cast<double>(this->width()) / this->height(), .1, 100);
-#else
-    qreal aspect = static_cast<double>(this->width()) / this->height();
-    projection.ortho(-3 * aspect, 3 * aspect, -3, 3, .1, 100);
-#endif
-    m_program.setUniformValue(4, projection);
-    m_program.release();
-
     m_center = {w / 2, h / 2};
 }
 
@@ -182,6 +172,15 @@ void Widget::paintGL()
     QMatrix4x4 view;
     view.lookAt(m_cameraPosition, m_cameraPosition + m_cameraFront, upNormal);
     m_program.setUniformValue(3, view);
+
+    QMatrix4x4 projection;
+#if PERSPECTIVE_ENABLE
+    projection.perspective(m_fov, static_cast<double>(this->width()) / this->height(), .1, 100);
+#else
+    qreal aspect = static_cast<double>(this->width()) / this->height();
+    projection.ortho(-3 * aspect, 3 * aspect, -3, 3, .1, 100);
+#endif
+    m_program.setUniformValue(4, projection);
 
     for(size_t i = 0; i < 10; ++i)
     {
@@ -270,4 +269,16 @@ void Widget::mousePressEvent(QMouseEvent *)
         QCursor::setPos(this->mapToGlobal(m_center));
         this->setMouseTracking(true);
     }
+}
+
+void Widget::wheelEvent(QWheelEvent *event)
+{
+    int angle = event->angleDelta().y();
+    if(m_fov > 1 && angle > 0)
+        --m_fov;
+    else if(m_fov < 179 && angle < 0)
+        ++m_fov;
+
+    this->repaint();
+    return QOpenGLWidget::wheelEvent(event);
 }
